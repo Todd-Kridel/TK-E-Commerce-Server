@@ -1,3 +1,5 @@
+
+
 const { Product } = require('../models');
 
 const productData = [
@@ -35,4 +37,6 @@ const productData = [
 
 const seedProducts = () => Product.bulkCreate(productData);
 
+// Export the seed data for usage in other areas of the application.
 module.exports = seedProducts;
+
