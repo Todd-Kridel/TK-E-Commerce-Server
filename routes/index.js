@@ -6,7 +6,7 @@ const apiRoutes = require('./api');
 
 // Implement/Activate the route API middleware systems.
 router.use('/api', apiRoutes);
-router.use('/', (req, res) => {
+router.use('/', (req, res) => {  // fallback route to catch URL entries that are not covered by a function-specific process of the application
 //router.use((req, res) => {
 res.send("<h1>A non-correct route URL was used.</h1>")
 });
