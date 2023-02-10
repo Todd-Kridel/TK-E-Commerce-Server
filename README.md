@@ -53,9 +53,11 @@ If the repository is being cloned to a local user computer for separate review/g
 
 2) Add an external ".env" database authentication information environment text file to the base level of the clone repository directory folder...and save into that file the following information lines...and replace the "<user>" and "<password>" components with the appropriate user-specific information:
 
-DB_NAME='ecommerce_db'
-DB_USER='<user>'
-DB_PASSWORD='<password>'
+    DB_NAME='ecommerce_db'
+
+    DB_USER='<user>'
+
+    DB_PASSWORD='<password>'
 
 3) Load/Seed the example data of the application database by entering the command "npm seeds/index.js" at a Node/NPM command prompt (when logged-out of to the MySQL system) when the main file system location of the computer and the console window is in the clone database of the "E-Commerce Server" application; Alternatively the "npm start" command can be used to both seed the database and then start the server process.
 
