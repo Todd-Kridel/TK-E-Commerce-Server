@@ -15,37 +15,35 @@ router.get('/', async (req, res) => {
   try {
     const products = await Product.findAll({
       include: [{model: Category}, {model: Tag}]
-      //{model: ProductTag, where: {product_id: Product.id}}]
-      //{model: Category, where: {id: Category.id}} 
-      //{model: ProductTag, where: {id: ProductTag.product_id}}
     });
-    res.send(products);
-    //res.status(200).json(products);
+    res.status(200).json(products);
+    //res.send(products);
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
 
+// to find all product-tag records
 router.get('/tag', async (req, res) => {  // ** AN ADDITIONAL ROUTE THAT WAS CREATED FOR EXTRA DATA-CHECK FUNCTIONALITY **
   try {
-    const products = await ProductTag.findAll({
-      //include: [{model: Product}, {model: Tag}]
-      //include: [{model: Product, attributes: [product_name], where: {product_id: Product.id}}, 
-      //  {model: Tag, attributes: [tag_name], where: {tag_id: Tag.id}}]
+    const productTags = await ProductTag.findAll({
+    //include: [{model: Product}, {model: Tag}]
     });
-    res.send(products);
-    //res.status(200).json(products);
+    res.status(200).json(productTags);
+    //res.send(productTags);
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
 
-// to find 1 product by its `id`
-// be sure to include its associated Category and Tag data
+// to find 1 product by its 'id'
+// being sure to include its associated Category and Tag data
 router.get('/:id', async (req, res) => {
   const requested_id = req.params.id;
   try {
@@ -54,8 +52,8 @@ router.get('/:id', async (req, res) => {
       include: [{model: Category}, {model: Tag}]
     });
     if (product != null) {
-      res.send(product);
-      //res.status(200).json(product);
+      res.status(200).json(product);
+      //res.send(product);
     }
     else {
       res.status(404).json({message: 'A product of the requested ID does not exist.'});
@@ -63,13 +61,39 @@ router.get('/:id', async (req, res) => {
     return;
   } 
   catch (err) {
-    res.send(err);
-    //res.status(500).json(err);
+    res.status(500).json(err);
+    //res.send(err);
+  }
+});
+
+
+// to find 1 product-tag record by its 'id'
+// being sure to include its associated Category and Tag data
+router.get('/tag/:id', async (req, res) => {  // ** AN ADDITIONAL ROUTE THAT WAS CREATED FOR EXTRA DATA-CHECK FUNCTIONALITY **
+  const requested_id = req.params.id;
+  try {
+    const productTag = await ProductTag.findOne({
+      where: {id: requested_id}, 
+      //include: [{model: Product}, {model: Tag}]
+    });
+    if (productTag != null) {
+      res.status(200).json(productTag);
+      //res.send(productTag);
+    }
+    else {
+      res.status(404).json({message: 'A product-tag record of the requested ID does not exist.'});
+    }
+    return;
+  } 
+  catch (err) {
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
 
 // to create a new product
+// being sure to also create any indicated tag ID records
 router.post('/', async (req, res) => {
   //
   // req.body should contain the following object update information:
@@ -86,7 +110,8 @@ router.post('/', async (req, res) => {
     let productResponse;
     const productResult = await Product.create(req.body)
       .then((product) => {
-        productResponse = product;
+        // a retainer variable for compiled response display at later
+        productResponse = "product id: NEW CREATED; product fields: " + JSON.stringify(req.body);
         // If there are product tags then create pairings to bulk create in the ProductTag model.
         if ((req.body.tagIds != undefined) && (req.body.tagIds.length > 0)) {
           const tagIds = req.body.tagIds.slice(0);
@@ -101,31 +126,31 @@ router.post('/', async (req, res) => {
           return ProductTag.bulkCreate(productTags);
         // If there are not any provided product tags then just respond.
         }
-        res.status(200).json(product);
+        //res.status(200).json(product);
       })  // ** AN ENHANCED DUAL-DATA-SET RESPONSE MESSAGE THAT CONTAINS BOTH PRODUCT DATA AND PRODUCT-TAG DATA **
-      .then((productTags) => res.status(200).json(JSON.stringify(productResponse) + JSON.stringify(productTags)))
+      .then((productTags) => res.status(200).json(productResponse + "; tag fields: " + JSON.stringify(productTags)))
       .catch((err) => {
-        //console.log("!!!!!!!!");
         //console.log(err);
         res.status(400).json(err);
       });
-      //res.status(500).json(err);
-    //return;
   }
   catch (err) {
-    res.send(err);
-    //res.status(500).json(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
 
 // to update a product by its 'id' value
+// being sure to also update any indicated or/and associated tag ID records
 router.put('/:id', async (req, res) => {
   try {
+    let productResponse;  // a retainer variable for compiled response display at later
     const product = await Product.update(req.body, {
       where: {id: req.params.id},
     })
     .then((product) => {
+      productResponse = "product id: " + req.params.id + "; product fields: " + JSON.stringify(req.body);
       // Find all associated tags from the ProductTag table.
       return ProductTag.findAll({
         where: {product_id: req.params.id}});
@@ -134,7 +159,7 @@ router.put('/:id', async (req, res) => {
       // Get a list of current tag IDs.
       const productTagIds = productTags.map(({tag_id}) => tag_id);
       // Create a filtered list of new tag IDs.
-      const newProductTags = req.body.tagIds
+      const newProductTags = req.body.tagIds  // a presumed required data component for the request message
         .filter((tag_id) => !productTagIds.includes(tag_id))
         .map((tag_id) => {
           return {
@@ -151,17 +176,17 @@ router.put('/:id', async (req, res) => {
         ProductTag.destroy({where: {id: productTagsToRemove}}),
         ProductTag.bulkCreate(newProductTags),
       ]);
-    })
-    .then((updatedProductTags) => res.json(updatedProductTags))
+    })  // ** AN ENHANCED DUAL-DATA-SET RESPONSE MESSAGE THAT CONTAINS BOTH PRODUCT DATA AND PRODUCT-TAG DATA **
+    .then((updatedProductTags) => res.status(200).json(productResponse + "; tag fields: " + JSON.stringify(updatedProductTags)))
     .catch((err) => {
-      // console.log(err);
       res.status(400).json(err);
+      // console.log(err);
       return;
     });
   }
   catch (err) {
-    res.send(err);
-    //res.status(500).json(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -174,7 +199,7 @@ router.delete('/:id', async (req, res) => {
       where: {id: requested_id}
     });
     if (product != 0) {
-      res.send('The requested product was deleted. ==> ' + 
+      res.status(200).send('The requested product was deleted. ==> ' + 
         'requested_id: ' + requested_id + ' (' + JSON.stringify(requested_id) + ' record)');
       //res.status(200).json({message: ''});
     }
@@ -184,7 +209,32 @@ router.delete('/:id', async (req, res) => {
   return;
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
+  }
+});
+
+
+// to delete a product-tag record by its 'id' value
+router.delete('/tag/:id', async (req, res) => {  // ** AN ADDITIONAL ROUTE THAT WAS CREATED FOR EXTRA DATA-CHECK FUNCTIONALITY **
+  const requested_id = req.params.id;
+  try {
+    const productTag = await ProductTag.destroy({
+      where: {id: requested_id}
+    });
+    if (productTag != 0) {
+      res.status(200).send('The requested product-tag record was deleted. ==> ' + 
+        'requested_id: ' + requested_id + ' (' + JSON.stringify(requested_id) + ' record)');
+      //res.status(200).json({message: ''});
+    }
+    else{
+      res.status(404).json({message: 'A product-tag record of the requested ID does not exist.'});
+    }
+  return;
+  } 
+  catch (err) {
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 

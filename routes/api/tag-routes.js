@@ -14,9 +14,11 @@ router.get('/', async (req, res) => {
     const tags = await Tag.findAll({
       include: {model: Product }
     });
-    res.send(tags);
+    res.status(200).json(tags);
+    //res.send(tags);
   } catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -31,8 +33,8 @@ router.get('/:id', async (req, res) => {
       include: {model: Product}
     });
     if (tag != null) {
-      res.send(tag);
-      //res.status(200).json(tag);
+      res.status(200).json(tag);
+      //res.send(tag);
     }
     else {
       res.status(404).json({message: 'A tag of the requested ID does not exist.'});
@@ -40,8 +42,8 @@ router.get('/:id', async (req, res) => {
     return;
   }
   catch (err) {
-    res.send(err);
-    //res.status(500).json(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -51,11 +53,12 @@ router.post('/', async (req, res) => {
   const requested_data = req.body;
   try {
     const tag = await Tag.create(requested_data);
-    res.send('The requested tag was created. ==> ' + JSON.stringify(tag));
+    res.status(200).send('The requested tag was created. ==> ' + JSON.stringify(tag));
     // res.status(200).json(tag);
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -69,9 +72,9 @@ router.put('/:id', async (req, res) => {
       where: {id: requested_id}
       });
     if (tag[0] != 0) {
-      res.send('The requested tag was updated. ==> ' + 
+      res.status(200).send('The requested tag was updated. ==> ' + 
         'requested_id: ' + requested_id + ' ' + JSON.stringify(requested_data));
-        //res.status(200).json({message: ''});
+      //res.status(200).json({message: ''});
     }
     else {
       res.status(404).json({message: 'A tag of the requested ID does not exist.'});
@@ -79,7 +82,8 @@ router.put('/:id', async (req, res) => {
   return;
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -92,7 +96,7 @@ router.delete('/:id', async (req, res) => {
       where: {id: requested_id}
     });
     if (tag != 0) {
-      res.send('The requested tag was deleted. ==> ' + 
+      res.status(200).send('The requested tag was deleted. ==> ' + 
         'requested_id: ' + requested_id + ' (' + JSON.stringify(requested_id) + ' record)');
       //res.status(200).json({message: ''});
     }
@@ -102,7 +106,8 @@ router.delete('/:id', async (req, res) => {
   return;
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 

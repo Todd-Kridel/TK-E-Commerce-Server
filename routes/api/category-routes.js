@@ -17,11 +17,12 @@ router.get('/', async (req, res) => {
     const categories = await Category.findAll({
       include: {model: Product}
     });
-    res.send(categories);
-    //res.status(200).json(categories);
+    res.status(200).json(categories);
+    //res.send(categories);
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -36,8 +37,8 @@ router.get('/:id', async (req, res) => {
       include: {model: Product}
     });
     if (category != null) {
-      res.send(category);
-      //res.status(200).json(category);
+      res.status(200).json(category);
+      //res.send(category);
     }
     else {
       res.status(404).json({message: 'A category of the requested ID does not exist.'});
@@ -45,8 +46,8 @@ router.get('/:id', async (req, res) => {
     return;
   }
   catch (err) {
-    res.send(err);
-    //res.status(500).json(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -56,11 +57,12 @@ router.post('/', async (req, res) => {
   const requested_data = req.body;
   try {
     const category = await Category.create(requested_data);
-    res.send('The requested category was created. ==> ' + JSON.stringify(category));
+    res.status(200).send('The requested category was created. ==> ' + JSON.stringify(category));
     // res.status(200).json(category);
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -74,9 +76,9 @@ router.put('/:id', async (req, res) => {
       where: {id: requested_id}
       });
     if (category[0] != 0) {
-      res.send('The requested category was updated. ==> ' + 
+      res.status(200).send('The requested category was updated. ==> ' + 
         'requested_id: ' + requested_id + ' ' + JSON.stringify(requested_data));
-        //res.status(200).json({message: ''});
+      //res.status(200).json({message: ''});
     }
     else {
       res.status(404).json({message: 'A category of the requested ID does not exist.'});
@@ -84,7 +86,8 @@ router.put('/:id', async (req, res) => {
   return;
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
@@ -97,7 +100,7 @@ router.delete('/:id', async (req, res) => {
       where: {id: requested_id}
     });
     if (category != 0) {
-      res.send('The requested category was deleted. ==> ' + 
+      res.status(200).send('The requested category was deleted. ==> ' + 
         'requested_id: ' + requested_id + ' (' + JSON.stringify(requested_id) + ' record)');
       //res.status(200).json({message: ''});
     }
@@ -107,7 +110,8 @@ router.delete('/:id', async (req, res) => {
   return;
   } 
   catch (err) {
-    res.send(err);
+    res.status(500).json(err);
+    //res.send(err);
   }
 });
 
