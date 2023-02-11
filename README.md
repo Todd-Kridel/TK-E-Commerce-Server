@@ -5,7 +5,7 @@
 
 This current Module 13 Challenge assignment -- an "E-Commerce Server" -- is a console-based application that allows for online-store data that is contained in the MySQL2 database of the application to be managed/referenced/updated in an HTTP request/response message-transfer system -- by way of corresponding API URL route functions. The functional/usage details of the application are described at below. The assignment provided a good mechanism for further learning about the back-end setup requirements and considerations that are applicable to database-based application programming (Sequelize, data/table models, data types, requirements, validations, associations/joins/includes/relations); with much consideration about the various elements of CRUD-operation function/data flow to the database and then the related corresponding resultant data response processes that are necessary to send the database information to a hypothetical front-end application system.
 
-This assignment did not include the creation of a front-end system; and instead the Insomnia HTTP request/response message-transfer API system was used to define and transmit to/from the necessary API URL routes that are necessary for the proper CRUD functionality of the application. Even though a front-end application creation was not necessary for this assignment project...there occurred much side consideration about front-end aspects and components.
+This assignment did not include the creation of a front-end system; and instead the Insomnia HTTP request/response message-transfer API system was used to define and transmit to/from the necessary API URL routes that are necessary for the proper CRUD functionality of the application. Even though a front-end application creation was not necessary for this assignment project...there were many occurrences of side considerations and contemplations about its possible aspects and components.
 
 ----
 
@@ -82,9 +82,9 @@ The following picture shows the console-based appearance of the Employee Databas
 
 ![an example view of the appearance of the E-Commerce Server application](./Challenge_13_Mockup.jpg)
 
-### APPLICATION DEMONSTRATION VIDEO
+### APPLICATION DEMONSTRATION VIDEOS
 
-The following URL is for the GitHub Pages published static-view public view of Todd Kridel's Coding Bootcamp Module 13 Challenge assignment...which contains an embedded display frame that is for the demonstration video of the application...and indicates a link that goes back to this README description file of the application: "https://todd-kridel.github.io/TK-E-Commerce-Server".
+The following URL is for the GitHub Pages published static-view public view of Todd Kridel's Coding Bootcamp Module 13 Challenge assignment...which contains embedded display frames that are for the demonstration videos of the application; and the webpage also indicates a link that goes back to this README description file of the application: "https://todd-kridel.github.io/TK-E-Commerce-Server".
 
 
 ## Credits
