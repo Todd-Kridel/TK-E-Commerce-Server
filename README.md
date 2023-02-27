@@ -78,7 +78,7 @@ To use this application/webpage...at after when installing the application and i
 
 5. Create some new records.
 
-The following picture shows the console-based appearance of the Employee Database Manager application:
+The following picture shows the console-based appearance of the E-Commerce application:
 
 ![an example view of the appearance of the E-Commerce Server application](./Challenge_13_Mockup.jpg)
 
